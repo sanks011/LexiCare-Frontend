@@ -18,17 +18,26 @@ const Therapists = () => {
     'Behavioral Therapist'
   ];
 
-  const applyFilter = () => {
-    if (speciality) {
-      setFilterTherapists(therapists.filter(therapist => therapist.speciality === speciality));
+  useEffect(() => {
+    if (therapists && therapists.length > 0) {
+      if (speciality) {
+        const filtered = therapists.filter(
+          therapist => therapist.speciality === speciality
+        );
+        setFilterTherapists(filtered);
+      } else {
+        setFilterTherapists(therapists);
+      }
+    }
+  }, [therapists, speciality]);
+
+  const handleSpecialtyClick = (specialty) => {
+    if (specialty === speciality) {
+      navigate('/doctors');  // Changed from '/therapists' to '/doctors'
     } else {
-      setFilterTherapists(therapists);
+      navigate(`/doctors/${specialty}`);  // Changed from '/therapists/' to '/doctors/'
     }
   };
-
-  useEffect(() => {
-    applyFilter();
-  }, [therapists, speciality]);
 
   return (
     <div className="container mx-auto px-6 py-16">
@@ -58,9 +67,9 @@ const Therapists = () => {
                 {specialties.map((specialty) => (
                   <button
                     key={specialty}
-                    onClick={() => specialty === speciality ? navigate('/therapists') : navigate(`/therapists/${specialty}`)}
+                    onClick={() => handleSpecialtyClick(specialty)}
                     className={`px-4 py-3 rounded-lg text-left transition-all ${
-                      speciality === specialty 
+                      speciality === specialty
                         ? 'bg-[#E6F6F7] text-[#1CBBB4] font-medium' 
                         : 'text-gray-600 hover:bg-gray-50'
                     }`}
